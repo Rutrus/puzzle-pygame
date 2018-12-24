@@ -15,19 +15,6 @@ pygame.init()
 
 DISPLAY = pygame.display.set_mode((166*x, 133*y), 0, 32)
 clock = pygame.time.Clock()
-DISPLAY.fill(RED)
-
-# Set up the fonts.
-basicFont = pygame.font.SysFont(None, 48)
-
-# Set up the text.
-text = basicFont.render('Hello world!', True, WHITE, BLACK)
-textRect = text.get_rect()
-textRect.centerx = DISPLAY.get_rect().centerx
-textRect.centery = DISPLAY.get_rect().centery
-
-# pygame.draw.rect(DISPLAY, RED, (textRect.left - 20,
-#     textRect.top - 20, textRect.width + 40, textRect.height + 40))
 
 def getColor(x,y):
     if (x+y)%2: return WHITE
@@ -132,10 +119,35 @@ def redrawBoard():
         for j in range(y):
             redraw(i,j)
 
-def moveRandom():
-    pass
+def moveRandom(num = 1):
+    global freeSquare
+    while num:
+        i,j = freeSquare
+        add = random.choice([1,-1])
+        if random.choice([0,1]):
+            i = i+add if add > 0 and i < 2 or add < 0 and i > 0 else i-add
+            newPosition = (i, j)
+            change(freeSquare, newPosition)
+            freeSquare = newPosition
+        else:
+            j = j+add if add > 0 and j < 2 or add < 0 and j > 0 else j-add
+            newPosition = (i, j)
+            change(freeSquare, newPosition)
+            freeSquare = newPosition
+        num -= 1
 
-while True:
+def isFinish():
+    for i in range(x):
+        for j in range(y):
+            if numbers[i][j] and numbers[i][j] != 3*j+i+1:
+                print("DISTINTOS",numbers[i][j], 3*j+i+1)
+                return False
+    return True
+
+moveRandom(1000)
+redrawBoard()
+continuar = True
+while continuar:
     pygame.display.update()
     event = pygame.event.wait()
     if event.type == QUIT:
@@ -149,5 +161,25 @@ while True:
                 freeSquare = newPosition
         elif event.key == K_KP_ENTER:
             moveRandom()
-        redrawBoard()
+        elif event.key == K_RETURN:
+            for i in range(100):
+                moveRandom()
+        redraw(freeSquare[0],freeSquare[1])
+        if isFinish():
+            DISPLAY.fill(RED)
+            # Set up the fonts.
+            basicFont = pygame.font.SysFont(None, 56)
+            # Set up the text.
+            text = basicFont.render('You Win!!', True, WHITE)
+            rect = text.get_rect()
+            rect.centerx = DISPLAY.get_rect().centerx
+            rect.centery = DISPLAY.get_rect().centery
+            pygame.draw.rect(DISPLAY, RED, (rect.left - 20,
+                rect.top - 20, rect.width + 40, rect.height + 40))
+            DISPLAY.blit(text, rect)
+            continuar = False
+            pygame.display.update()
+
     clock.tick(30)
+
+pygame.time.wait(1000)
