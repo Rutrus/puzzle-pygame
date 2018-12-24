@@ -96,8 +96,8 @@ def change(from_, to_ ):
         for i in range(a,b,5*exp):
             rectTexto.centerx = i
             rectCuadro.centerx = i
-            redrawBoard(x0,y0)
-            redrawBoard(x1,y1)
+            redraw(x0,y0)
+            redraw(x1,y1)
             DISPLAY.blit(texto0,rectTexto)
             pygame.display.flip()
     else:
@@ -108,29 +108,24 @@ def change(from_, to_ ):
         for i in range(a,b,5*exp):
             rectTexto.centery = i
             rectCuadro.centery = i
-            redrawBoard(x0,y0)
-            redrawBoard(x1,y1)
+            redraw(x0,y0)
+            redraw(x1,y1)
             DISPLAY.blit(texto0,rectTexto)
             pygame.display.flip()
 
     textos[x0][y0], textos[x1][y1] = texto1, texto0
 
-def redrawBoard(i = None, j = None):
-    if i is None and j is None:
-        for i in range(x):
-            for j in range(y):
-                rectTexto = textos[i][j].get_rect()
-                rectTexto.centery = cuadros[i][j].centery
-                rectTexto.centerx = cuadros[i][j].centerx
-                pygame.draw.rect(DISPLAY, getColor(i,j), cuadros[i][j])
-                DISPLAY.blit(textos[i][j], rectTexto)
-    else:
-        assert x is not None or y is not None, "Bad coordinates"
-        rectTexto = textos[i][j].get_rect()
-        rectTexto.centery = cuadros[i][j].centery
-        rectTexto.centerx = cuadros[i][j].centerx
-        pygame.draw.rect(DISPLAY, getColor(i,j), cuadros[i][j])
-        DISPLAY.blit(textos[i][j], rectTexto)
+def redraw(i,j):
+    rectTexto = textos[i][j].get_rect()
+    rectTexto.centery = cuadros[i][j].centery
+    rectTexto.centerx = cuadros[i][j].centerx
+    pygame.draw.rect(DISPLAY, getColor(i,j), cuadros[i][j])
+    DISPLAY.blit(textos[i][j], rectTexto)
+
+def redrawBoard():
+    for i in range(x):
+        for j in range(y):
+            redraw(i,j)
 
 def moveRandom():
     pass
