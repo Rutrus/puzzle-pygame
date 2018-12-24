@@ -16,7 +16,7 @@ pygame.init()
 DISPLAY = pygame.display.set_mode((166*x, 133*y), 0, 32)
 clock = pygame.time.Clock()
 DISPLAY.fill(RED)
-pygame.display.set_caption('Hello world!')
+
 # Set up the fonts.
 basicFont = pygame.font.SysFont(None, 48)
 
@@ -35,18 +35,16 @@ def getColor(x,y):
 
 cuadros = [ [[] for i in range(x)] for j in range(y)]
 textos = [ [[] for i in range(x)] for j in range(y)]
+numbers = [ [[] for i in range(x)] for j in range(y)]
 for i in range(x):
     for j in range(y):
-        if i == 0 and j == 2:
-            cuadros[i][j] = pygame.Rect(0,400//3*2,500//x,400//y)
-            textos[i][j] = pygame.font.SysFont(None,48).render("", True, BLACK)
-            continue
-
         cuadros[i][j] = pygame.draw.rect(DISPLAY, getColor(i,j), (500//x*i,400//y*j,500//x,400//y))
         if i == 0 and j == 2:
             textos[i][j] = pygame.font.SysFont(None,48).render("", True, BLACK)
+            numbers[i][j] = 0
             continue
-        textos[i][j] = pygame.font.SysFont(None,48).render(str(3*j+i+1), True, BLACK)
+        numbers[i][j] = 3*j+i+1
+        textos[i][j] = pygame.font.SysFont(None,48).render(str(numbers[i][j]), True, BLACK)
         rectTexto = textos[i][j].get_rect()
         rectTexto.centerx = cuadros[i][j].centerx
         rectTexto.centery = cuadros[i][j].centery
@@ -99,7 +97,6 @@ def change(from_, to_ ):
             redraw(x0,y0)
             redraw(x1,y1)
             DISPLAY.blit(texto0,rectTexto)
-            pygame.display.flip()
     else:
         a = cuadro0.centery
         b = cuadro1.centery
@@ -111,9 +108,17 @@ def change(from_, to_ ):
             redraw(x0,y0)
             redraw(x1,y1)
             DISPLAY.blit(texto0,rectTexto)
-            pygame.display.flip()
 
     textos[x0][y0], textos[x1][y1] = texto1, texto0
+    numbers[x0][y0], numbers[x1][y1] =  numbers[x1][y1], numbers[x0][y0]
+    print(numbers[x1][y1],3*y1+x1+1)
+    if numbers[x1][y1] == 3*y1+x1+1:
+        textos[x1][y1] = pygame.font.SysFont(None,48)
+        textos[x1][y1] = textos[x1][y1].render(str(numbers[x1][y1]), True, BLUE)
+    else:
+        textos[x1][y1] = pygame.font.SysFont(None,48)
+        textos[x1][y1] = textos[x1][y1].render(str(numbers[x1][y1]), True, BLACK)
+    DISPLAY.blit(textos[x1][y1], rectTexto)
 
 def redraw(i,j):
     rectTexto = textos[i][j].get_rect()
