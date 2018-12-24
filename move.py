@@ -96,7 +96,8 @@ def change(from_, to_ ):
         for i in range(a,b,5*exp):
             rectTexto.centerx = i
             rectCuadro.centerx = i
-            pygame.draw.rect(DISPLAY, getColor(x0,y0), rectCuadro)
+            redrawBoard(x0,y0)
+            redrawBoard(x1,y1)
             DISPLAY.blit(texto0,rectTexto)
             pygame.display.flip()
     else:
@@ -107,8 +108,8 @@ def change(from_, to_ ):
         for i in range(a,b,5*exp):
             rectTexto.centery = i
             rectCuadro.centery = i
-            pygame.draw.rect(DISPLAY, getColor(x0,y0), rectCuadro)
-            #pygame.draw.rect(DISPLAY, GREY, rectTexto)
+            redrawBoard(x0,y0)
+            redrawBoard(x1,y1)
             DISPLAY.blit(texto0,rectTexto)
             pygame.display.flip()
 
