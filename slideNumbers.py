@@ -11,7 +11,6 @@ BLUE = (0,0,255)
 x = BOARD_X_AXIS = 4
 y = BOARD_y_AXIS = 4
 freeSquare = (BOARD_X_AXIS-1,BOARD_y_AXIS-1)
-pygame.init()
 
 DISPLAY = pygame.display.set_mode((166*x, 133*y), 0, 32)
 clock = pygame.time.Clock()
@@ -20,22 +19,29 @@ def getColor(x,y):
     if (x+y)%2: return WHITE
     else: return GREY
 
-cuadros = [ [[] for i in range(x)] for j in range(y)]
-textos = [ [[] for i in range(x)] for j in range(y)]
-numbers = [ [[] for i in range(x)] for j in range(y)]
-for i in range(x):
-    for j in range(y):
-        cuadros[i][j] = pygame.draw.rect(DISPLAY, getColor(i,j), (166*i,133*j,166,133))
-        if (i,j) == (x-1,y-1):
-            textos[i][j] = pygame.font.SysFont(None,48).render("", True, BLACK)
-            numbers[i][j] = 0
-            continue
-        numbers[i][j] = y*j+i+1
-        textos[i][j] = pygame.font.SysFont(None,48).render(str(numbers[i][j]), True, BLACK)
-        rectTexto = textos[i][j].get_rect()
-        rectTexto.centerx = cuadros[i][j].centerx
-        rectTexto.centery = cuadros[i][j].centery
-        DISPLAY.blit(textos[i][j],rectTexto)
+def createBoard():
+    global cuadros
+    global textos
+    global numbers
+
+    cuadros = [ [[] for i in range(x)] for j in range(y)]
+    textos = [ [[] for i in range(x)] for j in range(y)]
+    numbers = [ [[] for i in range(x)] for j in range(y)]
+
+    pygame.init()
+    for i in range(x):
+        for j in range(y):
+            cuadros[i][j] = pygame.draw.rect(DISPLAY, getColor(i,j), (166*i,133*j,166,133))
+            if (i,j) == (x-1,y-1):
+                textos[i][j] = pygame.font.SysFont(None,48).render("", True, BLACK)
+                numbers[i][j] = 0
+                continue
+            numbers[i][j] = y*j+i+1
+            textos[i][j] = pygame.font.SysFont(None,48).render(str(numbers[i][j]), True, BLACK)
+            rectTexto = textos[i][j].get_rect()
+            rectTexto.centerx = cuadros[i][j].centerx
+            rectTexto.centery = cuadros[i][j].centery
+            DISPLAY.blit(textos[i][j],rectTexto)
 
 def move(key):
     move = freeSquare
@@ -117,9 +123,9 @@ def redrawBoard():
         for j in range(y):
             redraw(i,j)
 
-def moveRandom(num = 1):
+def moveRandom(times = 1):
     global freeSquare
-    while num:
+    while times:
         i,j = freeSquare
         add = random.choice([1,-1])
         if random.choice([0,1]):
@@ -132,7 +138,7 @@ def moveRandom(num = 1):
             newPosition = (i, j)
             change(freeSquare, newPosition)
             freeSquare = newPosition
-        num -= 1
+        times -= 1
 
 def isFinish():
     for i in range(x):
@@ -142,8 +148,12 @@ def isFinish():
                 return False
     return True
 
+# Create board and remix
+createBoard()
 moveRandom(500)
-redrawBoard()
+#redrawBoard()
+redraw(*freeSquare) # More efficient
+
 continuar = True
 while continuar:
     pygame.display.update()
@@ -162,11 +172,9 @@ while continuar:
         elif event.key == K_RETURN:
             for i in range(100):
                 moveRandom()
-        redraw(freeSquare[0],freeSquare[1])
+        redraw(*freeSquare)
         if isFinish():
-            # Set up the fonts.
             basicFont = pygame.font.SysFont(None, 56)
-            # Set up the text.
             text = basicFont.render('You Win!!', True, WHITE)
             rect = text.get_rect()
             rect.centerx = DISPLAY.get_rect().centerx
