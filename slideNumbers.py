@@ -142,7 +142,7 @@ def isFinish():
                 return False
     return True
 
-#moveRandom(500)
+moveRandom(500)
 redrawBoard()
 continuar = True
 while continuar:
