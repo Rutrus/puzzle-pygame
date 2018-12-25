@@ -8,9 +8,9 @@ RED = (255,0,0)
 GREEN = (0,255,0)
 BLUE = (0,0,255)
 
-x = 3
-y = 3
-
+x = BOARD_X_AXIS = 4
+y = BOARD_y_AXIS = 4
+freeSquare = (BOARD_X_AXIS-1,BOARD_y_AXIS-1)
 pygame.init()
 
 DISPLAY = pygame.display.set_mode((166*x, 133*y), 0, 32)
@@ -25,29 +25,27 @@ textos = [ [[] for i in range(x)] for j in range(y)]
 numbers = [ [[] for i in range(x)] for j in range(y)]
 for i in range(x):
     for j in range(y):
-        cuadros[i][j] = pygame.draw.rect(DISPLAY, getColor(i,j), (500//x*i,400//y*j,500//x,400//y))
-        if i == 0 and j == 2:
+        cuadros[i][j] = pygame.draw.rect(DISPLAY, getColor(i,j), (166*i,133*j,166,133))
+        if (i,j) == (x-1,y-1):
             textos[i][j] = pygame.font.SysFont(None,48).render("", True, BLACK)
             numbers[i][j] = 0
             continue
-        numbers[i][j] = 3*j+i+1
+        numbers[i][j] = y*j+i+1
         textos[i][j] = pygame.font.SysFont(None,48).render(str(numbers[i][j]), True, BLACK)
         rectTexto = textos[i][j].get_rect()
         rectTexto.centerx = cuadros[i][j].centerx
         rectTexto.centery = cuadros[i][j].centery
         DISPLAY.blit(textos[i][j],rectTexto)
 
-freeSquare = (0,2)
-
 def move(key):
     move = freeSquare
-    if key == K_LEFT and freeSquare[0] < 2:
+    if key == K_LEFT and freeSquare[0] < x-1:
         print("Key: left")
         move = (move[0]+1,move[1])
     elif key == K_RIGHT and freeSquare[0]:
         print("Key: right")
         move = (move[0]-1,move[1])
-    elif key == K_UP and freeSquare[1] < 2:
+    elif key == K_UP and freeSquare[1] < y-1:
         print("Key: up")
         move = (move[0],move[1]+1)
     elif key == K_DOWN and freeSquare[1]:
@@ -98,8 +96,8 @@ def change(from_, to_ ):
 
     textos[x0][y0], textos[x1][y1] = texto1, texto0
     numbers[x0][y0], numbers[x1][y1] =  numbers[x1][y1], numbers[x0][y0]
-    print(numbers[x1][y1],3*y1+x1+1)
-    if numbers[x1][y1] == 3*y1+x1+1:
+    print(numbers[x1][y1],y*y1+x1+1)
+    if numbers[x1][y1] == y*y1+x1+1:
         textos[x1][y1] = pygame.font.SysFont(None,48)
         textos[x1][y1] = textos[x1][y1].render(str(numbers[x1][y1]), True, BLUE)
     else:
@@ -125,12 +123,12 @@ def moveRandom(num = 1):
         i,j = freeSquare
         add = random.choice([1,-1])
         if random.choice([0,1]):
-            i = i+add if add > 0 and i < 2 or add < 0 and i > 0 else i-add
+            i = i+add if add > 0 and i < x-1 or add < 0 and i > 0 else i-add
             newPosition = (i, j)
             change(freeSquare, newPosition)
             freeSquare = newPosition
         else:
-            j = j+add if add > 0 and j < 2 or add < 0 and j > 0 else j-add
+            j = j+add if add > 0 and j < y-1 or add < 0 and j > 0 else j-add
             newPosition = (i, j)
             change(freeSquare, newPosition)
             freeSquare = newPosition
@@ -139,12 +137,12 @@ def moveRandom(num = 1):
 def isFinish():
     for i in range(x):
         for j in range(y):
-            if numbers[i][j] and numbers[i][j] != 3*j+i+1:
-                print("DISTINTOS",numbers[i][j], 3*j+i+1)
+            if numbers[i][j] and numbers[i][j] != y*j+i+1:
+                print("DISTINTOS",numbers[i][j], y*j+i+1)
                 return False
     return True
 
-moveRandom(1000)
+#moveRandom(500)
 redrawBoard()
 continuar = True
 while continuar:
@@ -181,4 +179,4 @@ while continuar:
 
     clock.tick(30)
 
-pygame.time.wait(1000)
+time.sleep(15)
