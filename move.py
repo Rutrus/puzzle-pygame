@@ -166,7 +166,6 @@ while continuar:
                 moveRandom()
         redraw(freeSquare[0],freeSquare[1])
         if isFinish():
-            DISPLAY.fill(RED)
             # Set up the fonts.
             basicFont = pygame.font.SysFont(None, 56)
             # Set up the text.
