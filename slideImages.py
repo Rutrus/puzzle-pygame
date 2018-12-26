@@ -165,7 +165,7 @@ clock = pygame.time.Clock()
 # Create board and remix
 createBoard()
 pygame.time.wait(3000)
-moveRandom(150)
+moveRandom(3)
 
 continuar = True
 while True:
@@ -196,6 +196,8 @@ while True:
                 rect.top - 20, rect.width + 40, rect.height + 40))
             DISPLAY.blit(text, rect)
             continuar = False
+            i,j = freeSquare
+            DISPLAY.blit(image[i][j],cuadros[i][j])
             pygame.display.update()
     clock.tick(30)
 pygame.time.wait(15*1000)
