@@ -30,8 +30,6 @@ def setImage():
     for i in range(x):
         for j in range(y):
             imCrop = im.crop((sq_x*i,sq_y*j,sq_x*(i+1),sq_y*(j+1)))
-            print(imCrop.mode)
-            print(sq_x,sq_y)
             byte_io = BytesIO()
             imCrop.save(byte_io,"PNG")
             image[i][j] = pygame.image.fromstring(imCrop.tobytes(),imCrop.size,imCrop.mode)
@@ -109,7 +107,6 @@ def change(from_, to_ ):
 
     numbers[x0][y0], numbers[x1][y1] =  numbers[x1][y1], numbers[x0][y0]
     image[x0][y0], image[x1][y1] =  image[x1][y1], image[x0][y0]
-    print(numbers[x1][y1],y*y1+x1+1)
     if numbers[x1][y1] == y*y1+x1+1:
         pass
     else:
@@ -168,7 +165,7 @@ clock = pygame.time.Clock()
 # Create board and remix
 createBoard()
 pygame.time.wait(3000)
-moveRandom(3)
+moveRandom(150)
 
 continuar = True
 while True:
